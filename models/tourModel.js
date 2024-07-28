@@ -118,6 +118,7 @@ const tourSchema = new mongoose.Schema(
 );
 
 // tourSchema.index({ price: 1 });
+tourSchema.index({ startLocation: '2dsphere' });
 tourSchema.index({ price: 1, ratingsAverage: -1 });
 tourSchema.index({ slug: 1 });
 
@@ -183,12 +184,19 @@ tourSchema.post(/^find/, function (docs, next) {
 });
 
 // Aggregation Middleware
-tourSchema.pre('aggregate', function (next) {
-  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
-  console.log(this.pipeline());
-  next();
-});
+// tourSchema.pre('aggregate', function (next) {
+//   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+//   console.log(this.pipeline());
+//   next();
+// });
 
 const Tour = mongoose.model('Tour', tourSchema);
+// Tour.ensureIndexes()
+//   .then(() => {
+//     console.log('Indexes are ensured');
+//   })
+//   .catch((err) => {
+//     console.error('Error ensuring indexes:', err);
+//   });
 
 module.exports = Tour;
